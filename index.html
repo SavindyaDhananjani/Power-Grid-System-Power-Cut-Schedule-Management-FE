@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+
+  <title>The Electro Grid System</title>
+  <link rel="icon" type="image/png" href=".\pg.png">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous" />
+
+
+  <style>
+    h1 {
+      text-shadow: 0 0 6px #a89a9a, 0 0 8px #8dddf5;
+      text-align: center;
+    }
+
+    .card {
+      margin-left: 255px;
+      margin-right: 255px;
+      display: inline-block;
+      position: relative;
+      width: 60%;
+      margin-bottom: 30px;
+      border-radius: 6px;
+      opacity: 85%;
+      background: rgb(166, 219, 243);
+    }
+
+    body {
+      background: #0457c4;
+      color: rgb(58, 59, 65);
+      font-family: Verdana, Helvetica, sans-serif;
+    }
+
+    #Modal1 {
+      margin-top: 200px;
+    }
+
+    #Modal2 {
+      margin-top: 200px;
+    }
+
+    input,
+    .modal {
+      color: rgb(31, 28, 30);
+      vertical-align: middle;
+    }
+
+    .table-striped>tbody>tr:nth-child(2n + 1)>td {
+      background-color: #5f94da;
+      color: rgb(0, 1, 7);
+    }
+
+    .table-striped>tbody>tr:nth-child(2n + 1)>th {
+      background-color: #094a94;
+      color: rgb(0, 1, 7);
+    }
+
+    .row .alert {
+      margin-top: 25px;
+    }
+
+    th,
+    td {
+      border-top: none !important;
+    }
+
+    h3 {
+      background-color: #5085ca;
+      padding: 10px;
+      font-weight: bolder;
+      letter-spacing: 0.1em;
+      text-align: center;
+    }
+
+    p {
+      font-size: 20px;
+      background-color: rgb(160, 166, 241);
+    }
+
+    .modal {
+      margin-top: 130px;
+    }
+
+    .modal-content {
+      border-radius: 0;
+    }
+
+    .modal-header,
+    .modal-footer {
+      background-color: #094a94;
+      color: rgb(189, 235, 241);
+      border: 5;
+    }
+
+    .modal-body {
+      background: rgb(160, 166, 241);
+      color: black;
+    }
+
+    .close,
+    .close:hover {
+      color: white;
+    }
+
+    .btn {
+      font-weight: bolder;
+      letter-spacing: 0.2em;
+      background-color: #060707;
+    }
+  </style>
+
+
+  <script>
+    window.console = window.console || function (t) { };
+  </script>
+
+  <script>
+    if (document.location.search.match(/type=embed/gi)) {
+      window.parent.postMessage("resize", "*");
+    }
+  </script>
+</head>
+
+
+<h1 style=font-size:40px><img src=".\pg.png"> The Electro Grid System</img></h1>
+<br><br>
+
+
+<!-- Card 1 -->
+
+<body translate="no">
+  <div class="card">
+    <div class="card-body">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            <h3>ADD POWER CUT SCHEDULE</h3><br>
+            <form id="addPowerCutSchedule" action="">
+              <div class="form-group">
+              <input class="form-control" type="text" name="zone" placeholder="Zone" required />
+              </div>
+              <div class="form-group">
+              <input class="form-control" type="date" id="dt" name="date" placeholder="Date" required />
+              </div>
+              <div class="form-group">
+              <input class="form-control" type="time" name="time" placeholder="Time" required />
+              </div>
+              <div class="form-group">
+              <input class="form-control" type="number" name="totalHours" placeholder="TotalHours" required />
+              </div>
+              <br>
+              <button class="btn btn-primary form-control" type="submit">SUBMIT</button><br><br>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br><br>
+
+  <!-- Disable past days -->
+
+  <script>
+    document.getElementById('dt').min = new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60000).toISOString().split("T")[0];
+  </script>
+
+  <!-- Card 2 -->
+
+  <div class="card">
+    <div class="card-body">
+      <div class="col-md-12">
+        <h3>POWER CUT SCHEDULE</h3><br>
+        <table id="powercutscheduleTable" class="table table-striped">
+          <tr>
+            <th><i>Zone</i></th>
+            <th><i>Date</i></th>
+            <th><i>Time</i></th>
+            <th><i>TotalHours</i></th>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for Update Power cut schedule details-->
+
+  <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" onClick="location.reload()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title" id="ModalLabel">Update Power Cut Schedule</h4>
+        </div>
+        <div class="modal-body"></div>
+        <div class="modal-footer"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for Delete Power cut schedule-->
+
+  <div class="modal fade" id="Modal1" tabindex="-1" role="dialog" aria-labelledby="ModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" onClick="location.reload()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title" id="ModalLabel">Delete Power Cut Schedule</h4>
+        </div>
+        <div class="modal-body"></div>
+        <div class="modal-footer"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for Power cut schedule delete successfull message-->
+
+  <div class="modal fade" id="Modal2" tabindex="-1" role="dialog" aria-labelledby="ModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h1 class="modal-title" id="ModalLabel">Power Cut Schedule deleted successfully!</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for Power cut schedule update successfull message-->
+
+  <div class="modal fade" id="Modal3" tabindex="-1" role="dialog" aria-labelledby="ModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h1 class="modal-title" id="ModalLabel">Power Cut Schedule updated successfully!</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script id="rendered-js">
+
+
+  //View Power cut schedule details
+
+    var powercutschedules = [
+      {
+        zone: "",
+        date: "",
+        time: "",
+        totalHours: ""
+      }
+    ];
+
+    $(document).ready(function () {
+      var settings = {
+        url: "http://localhost:8080/api/v1/powercutschedule/",
+        method: "GET",
+        timeout: 0,
+      };
+
+      $.ajax(settings).done(function (response) {
+        powercutschedules = response;
+        $.each(powercutschedules, function (i, powercutschedule) {
+          appendTopowercutscheduleTable(powercutschedule);
+        });
+      });
+    });
+
+    $("form").submit(function (e) {
+      e.preventDefault();
+    });
+
+    $("form#addPowerCutSchedule").submit(function () {
+      var powercutschedule = {};
+      var zoneInput = $(this).find("input[name=zone]");
+      var dateInput = $('input[name="date"]').val().trim();
+      var timeInput = $('input[name="time"]').val().trim();
+      var totalHoursInput = $('input[name="totalHours"]').val().trim();
+      if (zoneInput && dateInput && timeInput && totalHoursInput) {
+        $(this)
+          .serializeArray()
+          .map(function (data) {
+            powercutschedule[data.name] = data.value;
+          });
+        var lastPowerCutSchedule = powercutschedules[Object.keys(powercutschedules).sort().pop()];
+        powercutschedule.id = lastPowerCutSchedule.id + 1;
+
+        addPowerCutSchedule(powercutschedule);
+      } else {
+        alert("All fields must have a valid value.");
+      }
+    });
+
+    //Add Power cut schedule details
+
+    function addPowerCutSchedule(powercutschedule) {
+
+      var settings = {
+        url: "http://localhost:8080/api/v1/powercutschedule/",
+        method: "POST",
+        timeout: 0,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: JSON.stringify(powercutschedule),
+      };
+
+      $.ajax(settings).done(function (response) {
+        $("form#addPowerCutSchedule").trigger("reset");
+      });
+
+      powercutschedules.push(powercutschedule);
+      appendTopowercutscheduleTable(powercutschedule);
+
+    }
+
+    //Update Power cut schedule details modal
+
+    function editPowerCutSchedule(id) {
+      powercutschedules.forEach(function (powercutschedule, i) {
+        if (powercutschedule.id == id) {
+          $(".modal-body").empty().append(`
+                <form id="updatePowerCutSchedule" action="">
+                    <label for="name">Zone</label>
+                    <input class="form-control" type="text" name="zone" value="${powercutschedule.zone}"/>
+                    <label for="date">Date</label>
+                    <input class="form-control" type="date" id="dtu" name="date" value="${powercutschedule.date}"/>
+                    <label for="time">Time</label>
+                    <input class="form-control" type="time" name="time" value="${powercutschedule.time}"/>
+                    <label for="totalHours">TotalHours</label>
+                    <input class="form-control" type="number" name="totalHours" value="${powercutschedule.totalHours}"/>
+            `);
+            document.getElementById('dtu').min = new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60000).toISOString().split("T")[0];
+          $(".modal-footer").empty().append(`
+                    <button type="button" type="submit" class="btn btn-info" onClick="updatePowerCutSchedule(${id})" data-toggle="modal" data-target="#Modal2">Save changes</button>
+                    <button type="button" class="btn btn-info" onClick="location.reload()" data-dismiss="modal">Close</button>
+                </form>
+            `);
+        }
+      });
+    }
+
+    //Update Power cut schedule details
+
+    function updatePowerCutSchedule(id) {
+      var action;
+      var powercutschedule = {};
+      powercutschedule.id = id;
+      powercutschedules.forEach(function (powercutschedule, i) {
+        if (powercutschedule.id == id) {
+          $("#updatePowerCutSchedule")
+            .children("input")
+            .each(function () {
+              var value = $(this).val();
+              var attr = $(this).attr("name");
+              if (attr == "zone") {
+                powercutschedule.zone = value;
+              } else if (attr == "date") {
+                powercutschedule.date = value;
+              } else if (attr == "time") {
+                powercutschedule.time = value;
+              } else if (attr == "totalHours") {
+                powercutschedule.totalHours = value;
+              }
+            });
+
+          var settings = {
+            url: `http://localhost:8080/api/v1/powercutschedule/${powercutschedule.id}`,
+            method: "PUT",
+            timeout: 0,
+            headers: {
+              "Content-Type": "application/json",
+            },
+            data: JSON.stringify(powercutschedule),
+          };
+
+          $.ajax(settings).done(function (response) { });
+
+          powercutschedules[i] = powercutschedule;
+          $("#powercutscheduleTable #powercutschedule-" + powercutschedule.id).remove();
+          appendTopowercutscheduleTable(powercutschedule);
+          $(".modal").modal("toggle");
+
+        }
+      });
+    }
+
+    //Delete Power cut schedule modal
+
+    function removePowerCutSchedule(id) {
+      powercutschedules.forEach(function (powercutschedule, i) {
+        if (powercutschedule.id == id) {
+          $(".modal-body").empty().append(`
+                <form id="deletePowerCutSchedule">
+                    <p><i><b>Are You Sure You Want To Delete This Power Cut Schedule ???</b></i></p><br>
+            `);
+          $(".modal-footer").empty().append(`
+                    <button type="button" type="submit" class="btn btn-info" onClick="deletePowerCutSchedule(${id})" data-toggle="modal" data-target="#Modal2">Yes</button>
+                    <button type="button" class="btn btn-info" data-dismiss="modal">No </button>
+                </form>
+            `);
+        }
+      });
+    }
+
+    //Delete Power cut schedule details
+
+    function deletePowerCutSchedule(id) {
+      var action;
+      var powercutschedule = {};
+      powercutschedule.id = id;
+      powercutschedules.forEach(function (powercutschedule, i) {
+        if (powercutschedule.id == id && action != false) {
+          var settings = {
+            url: `http://localhost:8080/api/v1/powercutschedule/${powercutschedule.id}`,
+            method: "DELETE",
+            timeout: 0,
+          };
+
+          $.ajax(settings).done(function (response) { });
+
+          powercutschedules.splice(i, 1);
+          $("#powercutscheduleTable #powercutschedule-" + powercutschedule.id).remove();
+
+        }
+      });
+    }
+
+
+    //Power cut schedule details with change and remove buttons
+
+    function appendTopowercutscheduleTable(powercutschedule) {
+      $("#powercutscheduleTable > tbody:last-child").append(`
+        <tr id="powercutschedule-${powercutschedule.id}">
+            <td class="powercutscheduleData" name="zone">${powercutschedule.zone}</td>
+            '<td class="powercutscheduleData" name="date">${powercutschedule.date}</td>
+            '<td class="Time" name="time">${powercutschedule.time}</td>
+            '<td id="tdtotalHours" class="powercutscheduleData" name="totalHours">${powercutschedule.totalHours}</td>
+            '<td align="center">
+                <button class="btn btn-info form-control" onClick="editPowerCutSchedule(${powercutschedule.id})" data-toggle="modal" data-target="#Modal")">CHANGE</button>
+            </td>
+            <td align="center">
+                <button class="btn btn-danger form-control" onClick="removePowerCutSchedule(${powercutschedule.id})" data-toggle="modal" data-target="#Modal1">REMOVE</button>
+            </td>
+        </tr>
+    `);
+    }
+
+  </script>
+</body>
+</html>
